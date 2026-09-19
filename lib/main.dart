@@ -8,7 +8,9 @@
 // StatefulWidget, setState, Scaffold, AppBar, Column, Card, FilledButton.
 
 import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(
@@ -71,12 +73,30 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // State: a plain field. Changing it does nothing on its own; the screen only
   // redraws when you change it inside setState.
+  @override
+  void initState() {
+    super.initState();
+    _loadTaps();
+  }
+  Future<void> _loadTaps() async {
+    final shared_prefs = await SharedPreferences.getInstance();
+
+    final int? counter = shared_prefs.getInt('counter');
+
+  }
+
+     
   int _taps = 0;
 
-  void _handleTap() {
+  void _handleTap() async{
+    
+    final shared_prefs = await SharedPreferences.getInstance();
+
     setState(() {
       _taps++;
+      
     });
+    
   }
 
   @override
