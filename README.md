@@ -14,7 +14,7 @@ Built with help from Claude (Anthropic) - see [AI-USAGE.md](AI-USAGE.md) for exa
 
 > One sentence: what this app does, and who it is for.
 
-**Live demo:** https://alzltrav.github.io/Delitess-app/ <!-- GitHub Pages is set up already; replace if you host elsewhere -->
+**Live demo:** https://alzltrav.github.io/Delitess_app/ <!-- GitHub Pages is set up already; replace if you host elsewhere -->
 **Demo video:** `docs/demo.mp4` (link it here once it exists)
 **Course:** Applications Development and Emerging Technologies (6ADET), Holy Angel University
 **Author:** Your Name
