@@ -6,7 +6,11 @@
   New here? Read START-HERE.md first. Delete this comment when you are done.
 -->
 
-# App Name
+# App Name: DELITESS
+
+[![Made with AI]][(https://img.shields.io/badge/Made_with-AI_assistance-blue)](AI-USAGE.md)
+
+Built with help from Claude (Anthropic) - see [AI-USAGE.md](AI-USAGE.md) for exactly how.
 
 > One sentence: what this app does, and who it is for.
 
