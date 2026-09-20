@@ -10,7 +10,7 @@
 
 [![Made with AI]][(https://img.shields.io/badge/Made_with-AI_assistance-blue)](AI-USAGE.md)
 
-Built with help from Claude (Anthropic) - see [AI-USAGE.md](AI-USAGE.md) for exactly how.
+Built with help from Claude (Anthropic) & Gemini - see [AI-USAGE.md](AI-USAGE.md) for exactly how.
 
 > One sentence: what this app does, and who it is for.
 
