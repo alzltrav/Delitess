@@ -10,9 +10,16 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+Future <void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await dotenv.load(fileName: ".env");
+  
   runApp(
     // DevicePreview draws a phone frame around your app, so it is judged at the
     // size it was designed for instead of stretched across a laptop window.
@@ -71,6 +78,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  
+  
   // State: a plain field. Changing it does nothing on its own; the screen only
   // redraws when you change it inside setState.
   @override
@@ -96,7 +105,6 @@ class _HomeScreenState extends State<HomeScreen> {
   
 
   Future<void> _handleTap() async {
-    final shared_prefs = await SharedPreferences.getInstance();
 
     setState(() {
       _taps++;
@@ -107,6 +115,34 @@ class _HomeScreenState extends State<HomeScreen> {
     final sharedPrefs = await SharedPreferences.getInstance();
     await sharedPrefs.setInt('tap', _taps);    
     
+  }
+
+  Future<void> _testGemini() async {
+
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    
+    if (image == null) return;
+
+    final bytes = await image.readAsBytes();
+    
+    final apiKey = dotenv.env['GEMINI_API_KEY'];
+    if (apiKey == null) {
+      print('API Key is missing.');
+      return;
+    }
+
+    final model = GenerativeModel(model: 'gemini-3.6-flash', apiKey: apiKey);
+
+    final response = await model.generateContent([
+      Content.multi([
+        TextPart('What dish is this? Give me a brief recipe.'),
+        DataPart('image/jpeg', bytes)
+      ])
+    ]);
+
+    print(response.text);
+
+
   }
 
   @override
@@ -154,6 +190,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         icon: const Icon(Icons.touch_app),
                         label: const Text('Tap me'),
                       ),
+                      ElevatedButton(
+                        onPressed: _testGemini, 
+                        child: const Text('Test Gemini API'),
+                        ),
                     ],
                   ),
                 ),
