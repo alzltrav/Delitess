@@ -79,23 +79,29 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadTaps();
   }
   Future<void> _loadTaps() async {
-    final shared_prefs = await SharedPreferences.getInstance();
+    final sharedPrefs = await SharedPreferences.getInstance();
 
-    final int? counter = shared_prefs.getInt('counter');
+    final savedTaps = sharedPrefs.getInt('tap') ?? 0;
+    
+    setState(() {
+      _taps = savedTaps;  
+    });
 
+    
   }
-
-     
+  
   int _taps = 0;
 
-  void _handleTap() async{
+  Future<void> _handleTap() async{
     
-    final shared_prefs = await SharedPreferences.getInstance();
-
     setState(() {
       _taps++;
       
+
+      
     });
+    final sharedPrefs = await SharedPreferences.getInstance();
+    await sharedPrefs.setInt('tap', _taps);    
     
   }
 
