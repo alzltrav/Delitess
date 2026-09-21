@@ -14,6 +14,11 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'theme/app_spacing.dart';
+import 'widgets/ask_ai_composer.dart';
+import 'widgets/recipe_card.dart';
+import 'widgets/app_nav_bar.dart';
+import 'widgets/trending_recipe_card.dart';
 
 Future <void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,22 +50,42 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'My Final Project',
-      debugShowCheckedModeBanner: false,
+    
+    final lightScheme = ColorScheme.fromSeed(
+      seedColor: const Color(0xFF8EC7E3),
+      brightness: Brightness.light,
+    );
 
-      // These two lines are what make the DevicePreview toolbar actually
-      // change the app. Keep them.
+    return MaterialApp(
+      title: 'DELITESS',
+      debugShowCheckedModeBanner: false,
       locale: DevicePreview.locale(context),
       builder: DevicePreview.appBuilder,
 
-      // Your design system starts here. One seed color generates a full
-      // Material palette; swap in your own and every screen follows.
+      
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF6750A4)),
+        colorScheme: lightScheme,
+        scaffoldBackgroundColor: const Color(0xFFFAF6EF), 
+        textTheme: const TextTheme(
+          // headlineSmall: 20sp, Bold (Screen and recipe titles)
+          headlineSmall: TextStyle(
+            fontSize: 20, 
+            fontWeight: FontWeight.bold, 
+            color: Color(0xFF3A4750), 
+          ),
+          // bodyMedium: 16sp, Regular (Ingredients and steps)
+          bodyMedium: TextStyle(
+            fontSize: 16, 
+            color: Color(0xFF3A4750),
+          ),
+          // labelSmall: 12sp, Regular (Captions using text-secondary at 65% opacity)
+          labelSmall: TextStyle(
+            fontSize: 12, 
+            color: Color(0xA63A4750), 
+          ),
+        ),
       ),
-
       home: const HomeScreen(),
     );
   }
@@ -80,8 +105,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   
   
-  // State: a plain field. Changing it does nothing on its own; the screen only
-  // redraws when you change it inside setState.
+  final TextEditingController _searchController = TextEditingController();
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+
+  }
+
   @override
   void initState() {
     super.initState();
@@ -147,67 +178,102 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Reading colors and text styles from the theme, instead of hardcoding
-    // them, is what keeps every screen looking like the same app.
-    final theme = Theme.of(context);
-
+    
     return Scaffold(
+      backgroundColor: const Color(0xFFFAF6EF),
       appBar: AppBar(
-        title: const Text('My Final Project'),
-        backgroundColor: theme.colorScheme.primaryContainer,
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.rocket_launch,
-                size: 72,
-                color: theme.colorScheme.primary,
-              ),
-              const SizedBox(height: 16),
-              Text('It works', style: theme.textTheme.headlineSmall),
-              const SizedBox(height: 8),
-              Text(
-                'This is the starting point of your final project. '
-                'Open lib/main.dart and start changing it.',
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 24),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      Text('Taps: $_taps',
-                          style: theme.textTheme.headlineSmall),
-                      const SizedBox(height: 12),
-                      FilledButton.icon(
-                        onPressed: _handleTap,
-                        icon: const Icon(Icons.touch_app),
-                        label: const Text('Tap me'),
-                      ),
-                      ElevatedButton(
-                        onPressed: _testGemini, 
-                        child: const Text('Test Gemini API'),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Close the app and the count goes back to zero. '
-                'Fixing that is what content/extending-your-app is about.',
-                textAlign: TextAlign.center,
-                style: theme.textTheme.labelSmall,
-              ),
-            ],
-          ),
+        title: const Text(
+          'DELITESS',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: const Color(0xFF3A4750),
+
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(AppSpacing.sm),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AskAiComposer(
+              controller: _searchController, 
+              onAttachPhoto: _testGemini, 
+              onSubmit: (value) {
+                print('Searching for: $value');
+              },
+            ),
+            const SizedBox(height: AppSpacing.md),
+
+            // Section Title
+            const Text(
+              'Trending Recipes',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF3A4750),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            // Swipable horizontal carousel
+           SizedBox(
+              height: 160, 
+              child: ListView(
+                scrollDirection: Axis.horizontal, 
+                children: [
+                  TrendingRecipeCard(
+                    title: 'Chicken Adobo',
+                    subtitle: '45 min',
+                    imageUrl: 'https://panlasangpinoy.com/wp-content/uploads/2009/08/Pork-Adobo-Recipe.jpg',
+                    onTap: () {},
+                  ),
+                  TrendingRecipeCard(
+                    title: 'Pancit Canton',
+                    subtitle: '30 min',
+                    imageUrl: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=500',
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            ),
+            
+            const SizedBox(height: AppSpacing.md),
+            // Recipe List
+            Expanded(
+              child: ListView(
+                children: [
+                  RecipeCard(
+                    title: 'Chicken Adobo', 
+                    subtitle: '45 min · Filipino', 
+                    thumbnailColor: const Color(0xFF8EC7E3), 
+                    onTap: () {},
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  RecipeCard(
+                     title: 'Pancit Canton', 
+                     subtitle: '30 min · Filipino', 
+                     thumbnailColor: const Color(0xFFC9E4EE), 
+                     onTap: () {},
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  RecipeCard(
+                     title: 'Sinigang na Baboy', 
+                     subtitle: '1 hr 10 min · Filipino', 
+                     thumbnailColor: const Color(0xFF8EC7E3), 
+                     onTap: () {},
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      
+      bottomNavigationBar: AppNavBar(
+        activeIndex: 0, 
+        onTap: (index) {
+          print('Tapped nav index: $index');
+        },
       ),
     );
   }
