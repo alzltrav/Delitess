@@ -19,6 +19,8 @@ import 'widgets/ask_ai_composer.dart';
 import 'widgets/recipe_card.dart';
 import 'widgets/app_nav_bar.dart';
 import 'widgets/trending_recipe_card.dart';
+import 'dart:async';
+import 'package:flutter/gestures.dart';
 
 Future <void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,6 +63,14 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       locale: DevicePreview.locale(context),
       builder: DevicePreview.appBuilder,
+
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
+        dragDevices: {
+          PointerDeviceKind.mouse,
+          PointerDeviceKind.touch,
+          PointerDeviceKind.trackpad,
+        },
+      ),
 
       
       theme: ThemeData(
@@ -106,17 +116,47 @@ class _HomeScreenState extends State<HomeScreen> {
   
   
   final TextEditingController _searchController = TextEditingController();
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
 
-  }
+  final ScrollController _carouselController = ScrollController();
+  Timer? _autoScrollTimer;
+  
 
   @override
   void initState() {
     super.initState();
     _loadTaps();
+
+    _autoScrollTimer = Timer.periodic(const Duration(seconds: 3), (timer){
+      if (_carouselController.hasClients) {
+        double maxScroll = _carouselController.position.maxScrollExtent;
+        double currentScroll = _carouselController.position.pixels;
+
+        double scrollAmount = 166.0;
+
+        if (currentScroll + scrollAmount <= maxScroll) {
+          _carouselController.animateTo(
+            currentScroll + scrollAmount,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
+        } else {
+          _carouselController.animateTo(
+            0,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _autoScrollTimer?.cancel();
+    _carouselController.dispose();
+    super.dispose();
+
   }
   Future<void> _loadTaps() async {
 
@@ -219,6 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
            SizedBox(
               height: 160, 
               child: ListView(
+                controller: _carouselController,
                 scrollDirection: Axis.horizontal, 
                 children: [
                   TrendingRecipeCard(
@@ -233,6 +274,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     imageUrl: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=500',
                     onTap: () {},
                   ),
+                  TrendingRecipeCard(
+                    title: 'Chicken Inasal',
+                    subtitle: '50 min',
+                    imageUrl: 'https://images.unsplash.com/photo-1598514982205-f36b96d1e8d4?w=500',
+                    onTap: () {},
+                  ),
+                  TrendingRecipeCard(
+                    title: 'Beef Tapa',
+                    subtitle: '20 min',
+                    imageUrl: 'https://i.pinimg.com/1200x/94/4b/bd/944bbd7ea3cf3329ccab337f1a98f3ed.jpg',
+                    onTap: () {},
+                  ),
                 ],
               ),
             ),
@@ -243,24 +296,36 @@ class _HomeScreenState extends State<HomeScreen> {
               child: ListView(
                 children: [
                   RecipeCard(
-                    title: 'Chicken Adobo', 
-                    subtitle: '45 min · Filipino', 
-                    thumbnailColor: const Color(0xFF8EC7E3), 
+                    title: 'Chicken Adobo',
+                    subtitle: '45 min · Filipino',
+                    thumbnailColor: const Color(0xFF8EC7E3),
+                    imageUrl: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=500',
                     onTap: () {},
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   RecipeCard(
-                     title: 'Pancit Canton', 
-                     subtitle: '30 min · Filipino', 
-                     thumbnailColor: const Color(0xFFC9E4EE), 
-                     onTap: () {},
+                    title: 'Pancit Canton',
+                    subtitle: '30 min · Filipino',
+                    thumbnailColor: const Color(0xFFC9E4EE),
+                    imageUrl: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=500',
+                    onTap: () {},
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   RecipeCard(
-                     title: 'Sinigang na Baboy', 
-                     subtitle: '1 hr 10 min · Filipino', 
-                     thumbnailColor: const Color(0xFF8EC7E3), 
-                     onTap: () {},
+                    title: 'Sinigang na Baboy',
+                    subtitle: '1 hr 10 min · Filipino',
+                    thumbnailColor: const Color(0xFF8EC7E3),
+                    imageUrl: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=500', // NEW
+                    onTap: () {},
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  RecipeCard(
+                    title: 'Japanese Curry',
+                    subtitle: '45 min · Japanese',
+                    thumbnailColor: const Color(0xFFC9E4EE),
+                    imageUrl: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=500', // NEW
+                    onTap: () {},
+                  
                   ),
                 ],
               ),
