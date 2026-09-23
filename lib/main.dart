@@ -21,6 +21,7 @@ import 'widgets/app_nav_bar.dart';
 import 'widgets/trending_recipe_card.dart';
 import 'dart:async';
 import 'package:flutter/gestures.dart';
+import 'screens/search_screen.dart';
 
 Future <void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -240,6 +241,13 @@ class _HomeScreenState extends State<HomeScreen> {
               controller: _searchController, 
               onAttachPhoto: _testGemini, 
               onSubmit: (value) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchScreen(initialQuery: value,)
+                  ),
+                );
+                _searchController.clear();
                 print('Searching for: $value');
               },
             ),
