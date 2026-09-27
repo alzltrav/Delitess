@@ -48,13 +48,26 @@ When the app successfully boots, you will see a starting screen with a tap count
 - **Persistent Tap Counter:** Tests local device storage using `shared_preferences`. Tap the button, close the app, and reopen it to verify the count is saved.
 - **Gemini API Spike:** Tap "Test Gemini API" to open the device gallery. Select a food image, and the app will send it to the Gemini 3.6-flash model. Check the IDE debug console to read the generated recipe.
 
+*Currently in Week 2 Development.*
+- **UI & Navigation:** Fully implemented Midterm Design System featuring a dynamic Home screen, an auto-scrolling horizontal trending carousel, a static Search results page, and a Saved recipes tab.
+- **Hero Animations:** Recipe detail screens utilize `CustomScrollView` and `SliverAppBar` for premium image transitions.
+- **Gemini API Spike:** Tap "Test Gemini API" to open the device gallery. Select a food image, and the app will send it to the Gemini model. (Currently prints recipe to IDE debug console).
+
+## 7. Known issues and next steps
+- **Current state:** The UI is 100% built and navigation is functional. The Gemini API logic successfully connects to Google's servers, but currently only prints the output to the debug console.
+- **Next steps:** Wire the Gemini API response directly into the UI so that snapping a photo dynamically generates a `RecipeDetailScreen` instead of printing to the console.
+
 ## 5. Project structure
 - `lib/main.dart`: Contains the main application setup, the `_testGemini` API integration spike, and the `shared_preferences` tap counter.
 - `pubspec.yaml`: Manages dependencies including `google_generative_ai`, `image_picker`, `shared_preferences`, and `flutter_dotenv`.
 - `.env`: (Ignored in git) Holds the Gemini API key.
 
 ## 6. Screenshots
-![App Screenshot](screenshot.png)
+## 6. Screenshots
+
+| Home | Search | Recipe Details | Saved |
+| :---: | :---: | :---: | :---: |
+| ![Home](home.png) | ![Search](search.png) | ![Recipe Detail](detail.png) | ![Saved](saved.png) |
 
 
 ## 7. Known issues and next steps

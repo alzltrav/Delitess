@@ -20,11 +20,25 @@ Local Storage (_loadTaps and _handleTap): I wrote the logic to save the tap coun
 Gemini API Spike (_testGemini): I drafted the function to handle the AI response. The AI gave me the package names and payload format, but I wrote the sequence to pick an image from the gallery, convert it to bytes, check the .env file for the API key, and pass everything to the Gemini model.
 
 
-September 21, 2026
+September 21-23, 2026
 
-## 1. How I used AI
+### 1. How I used AI
+I used AI to help translate my Midterm Figma mockups into Flutter code. The AI generated the boilerplate for the `ThemeData`, custom modular widgets (`RecipeCard`, `AskAiComposer`), and the `CustomScrollView` for the Recipe Details screen. 
 
+### 2. Where the AI got it wrong
+The AI initially tried to make my Search results page fully dynamic, which violated the static requirements of my Midterm mockups. I had to prompt it to revert to a hardcoded "Spicy Garlic Noodles" card to match my Figma design exactly. 
 
-## 2. Where the AI got it wrong
+### 3. Who wrote what
+**UI Layouts:** The AI provided the structural code (`ListView`, `SliverAppBar`, `Scaffold`), but I provided the exact HEX codes, padding values, and Unsplash image URLs to ensure it matched my specific design system.
+**Navigation:** The AI provided the `Navigator.push` syntax, but I mapped out the routing logic to ensure the `AppNavBar` properly swapped between the Home and Saved states using `setState`.
 
-## 3. Who wrote what
+September 27, 2026
+
+### 1. How I used AI
+I used AI to help audit my repository for the M8A5 Security Checklist requirement and to translate a Mac/Linux bash command (`grep`) into a Windows PowerShell equivalent (`Select-String`).
+
+### 2. Where the AI got it wrong
+The AI initially told me to run a Mac/Linux command (`grep`) in my Windows terminal to check my git history, which threw a CommandNotFoundException. It corrected it to `Select-String` once I provided the error log.
+
+### 3. Who wrote what
+**Security Checklist:** The AI generated the Markdown table formatting based on the professor's template, and I verified the evidence manually by running the terminal commands and checking my `.gitignore` and `.env.example` files.
