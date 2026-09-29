@@ -62,7 +62,7 @@ When the app successfully boots, you will see a starting screen with a tap count
 - `pubspec.yaml`: Manages dependencies including `google_generative_ai`, `image_picker`, `shared_preferences`, and `flutter_dotenv`.
 - `.env`: (Ignored in git) Holds the Gemini API key.
 
-## 6. Screenshots
+
 ## 6. Screenshots
 
 | Home | Search | Recipe Details | Saved |
