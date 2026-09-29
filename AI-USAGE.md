@@ -42,3 +42,15 @@ The AI initially told me to run a Mac/Linux command (`grep`) in my Windows termi
 
 ### 3. Who wrote what
 **Security Checklist:** The AI generated the Markdown table formatting based on the professor's template, and I verified the evidence manually by running the terminal commands and checking my `.gitignore` and `.env.example` files.
+
+September 29, 2026
+
+### 1. How I used AI
+I used AI to restructure the `RecipeDetailScreen` to accept dynamic data and to rewrite the `_testGemini()` function. The AI helped configure the Gemini API to return a strict JSON schema and mapped that JSON directly into the UI parameters.
+
+### 2. Where the AI got it wrong
+The AI gave me the deprecated `gemini-1.5-flash` model endpoint again, which immediately caused a 404 error. I had to point out the mistake so it could correct the code to `gemini-3.6-flash`. 
+
+### 3. Who wrote what
+**Dynamic UI Integration:** The AI wrote the JSON parsing logic and the `...map()` spread operators for the lists.
+**Debugging:** I ran the execution and diagnosed the resulting 503 Server Error (High Demand) from Google's API, deciding to pause testing until the servers stabilized.

@@ -16,6 +16,7 @@ import 'package:flutter/gestures.dart';
 import 'screens/search_screen.dart';
 import 'recipe_detail_screen.dart';
 import 'saved_screen.dart';
+import 'dart:convert';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -155,15 +156,64 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    final model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: apiKey);
-    final response = await model.generateContent([
-      Content.multi([
-        TextPart('What dish is this? Give me a brief recipe.'),
-        DataPart('image/jpeg', bytes),
-      ]),
-    ]);
+    
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
 
-    print(response.text);
+    try {
+      
+      final model = GenerativeModel(
+        model: 'gemini-3.6-flash',
+        apiKey: apiKey,
+        generationConfig: GenerationConfig(responseMimeType: 'application/json'),
+      );
+
+      final prompt = '''
+      Analyze this food image. Return a JSON object with this exact structure:
+      {
+        "title": "Name of the dish",
+        "time": "Estimated cooking time (e.g. 20 min)",
+        "ingredients": ["ingredient 1", "ingredient 2"],
+        "instructions": ["step 1", "step 2"]
+      }
+      ''';
+
+      final response = await model.generateContent([
+        Content.multi([
+          TextPart(prompt),
+          DataPart('image/jpeg', bytes)
+        ])
+      ]);
+
+      
+      if (mounted) Navigator.pop(context);
+
+      
+      final data = jsonDecode(response.text!);
+
+    
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RecipeDetailScreen(
+              title: data['title'] ?? 'Custom Recipe',
+              time: data['time'] ?? 'Unknown time',
+              imageBytes: bytes, // Passes the photo they just uploaded to the header!
+              ingredients: List<String>.from(data['ingredients'] ?? []),
+              instructions: List<String>.from(data['instructions'] ?? []),
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      
+      if (mounted) Navigator.pop(context);
+      print('Gemini Error: $e');
+    }
   }
 
   @override

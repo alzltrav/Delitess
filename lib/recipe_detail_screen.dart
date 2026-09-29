@@ -1,17 +1,24 @@
 
 import 'package:flutter/material.dart';
 import 'theme/app_spacing.dart';
+import 'dart:typed_data';
 
 class RecipeDetailScreen extends StatefulWidget {
   final String title;
-  final String imageUrl;
+  final String? imageUrl;
   final String time;
+  final Uint8List? imageBytes;
+  final List<String>? ingredients;
+  final List<String>? instructions;
 
   const RecipeDetailScreen({
     super.key,
     required this.title,
-    required this.imageUrl,
     required this.time,
+    this.imageUrl,
+    this.imageBytes,
+    this.ingredients,
+    this.instructions,
   });
 
   @override
@@ -23,6 +30,23 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final displayIngredients = widget.ingredients ?? [
+      '1 kg Chicken (cut into pieces)',
+      '1/2 cup Soy Sauce',
+      '1/4 cup White Vinegar',
+      '1 head Garlic (minced)',
+      '1 tsp Whole Peppercorns',
+      '3 Dried Bay Leaves',
+    ];
+
+    final displayInstructions = widget.instructions ?? [
+      'Combine chicken, soy sauce, and garlic in a large bowl. Marinate for at least 1 hour.',
+      'Heat a cooking pot. Put-in the marinated chicken. Cook for 5 minutes.',
+      'Pour in the remaining marinade, water, peppercorns, and bay leaves. Boil and simmer for 30 minutes.',
+      'Add vinegar. Stir and cook for 10 minutes. Serve hot with rice!',
+    ];
+
     return Scaffold(
       backgroundColor: const Color(0xFFFAF6EF),
       body: CustomScrollView(
@@ -48,13 +72,18 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
-              background: Image.network(
-                widget.imageUrl,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  color: const Color(0xFFC9E4EE),
+              background: widget.imageBytes != null
+                ? Image.memory(
+                  widget.imageBytes!,
+                  fit: BoxFit.cover,
+                )
+                : Image.network(
+                  widget.imageUrl ?? '',
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: const Color(0xFFC9E4EE),
+                  ),
                 ),
-              ),
             ),
           ),
           
@@ -105,12 +134,8 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
-                  _buildIngredientItem('1 kg Chicken (cut into pieces)'),
-                  _buildIngredientItem('1/2 cup Soy Sauce'),
-                  _buildIngredientItem('1/4 cup White Vinegar'),
-                  _buildIngredientItem('1 head Garlic (minced)'),
-                  _buildIngredientItem('1 tsp Whole Peppercorns'),
-                  _buildIngredientItem('3 Dried Bay Leaves'),
+                  
+                  ...displayIngredients.map((item) => _buildIngredientItem(item)),
                   
                   const SizedBox(height: AppSpacing.lg),
                   
@@ -124,10 +149,10 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
-                  _buildInstructionStep('1', 'Combine chicken, soy sauce, and garlic in a large bowl. Marinate for at least 1 hour.'),
-                  _buildInstructionStep('2', 'Heat a cooking pot. Put-in the marinated chicken. Cook for 5 minutes.'),
-                  _buildInstructionStep('3', 'Pour in the remaining marinade, water, peppercorns, and bay leaves. Boil and simmer for 30 minutes.'),
-                  _buildInstructionStep('4', 'Add vinegar. Stir and cook for 10 minutes. Serve hot with rice!'),
+                  
+                  ...displayInstructions.asMap().entries.map(
+                    (entry) => _buildInstructionStep((entry.key + 1).toString(), entry.value)
+                  ),
                   
                   const SizedBox(height: 80), // Extra padding at bottom
                 ],
