@@ -54,3 +54,15 @@ The AI gave me the deprecated `gemini-1.5-flash` model endpoint again, which imm
 ### 3. Who wrote what
 **Dynamic UI Integration:** The AI wrote the JSON parsing logic and the `...map()` spread operators for the lists.
 **Debugging:** I ran the execution and diagnosed the resulting 503 Server Error (High Demand) from Google's API, deciding to pause testing until the servers stabilized.
+
+September 30, 2026
+
+### 1. How I used AI
+I used AI to implement graceful error handling for the Gemini API call by adding a `SnackBar` widget to alert the user if the server fails.
+
+### 2. Where the AI got it wrong
+The AI instructions were accurate today, and the code worked on the first try.
+
+### 3. Who wrote what
+**Error Handling:** The AI provided the `ScaffoldMessenger.of(context).showSnackBar` syntax.
+**Testing & Verification:** I ran the app, verified that the 503 error from yesterday had cleared up, and successfully generated a "Classic Shakshuka" recipe dynamically from a gallery photo into the new UI layout.

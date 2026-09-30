@@ -212,6 +212,13 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (e) {
       
       if (mounted) Navigator.pop(context);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('AI is currently busy. Please try again later!')),
+        );
+      }
+      
       print('Gemini Error: $e');
     }
   }
