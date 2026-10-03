@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-
 class AskAiComposer extends StatelessWidget {
-
   final TextEditingController controller;
   final VoidCallback onAttachPhoto;
   final ValueChanged<String> onSubmit;
@@ -16,14 +14,19 @@ class AskAiComposer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onSurface = Theme.of(context).colorScheme.onSurface;
+
     return TextField(
       controller: controller,
       onSubmitted: onSubmit,
+      style: TextStyle(color: onSurface),
       decoration: InputDecoration(
         hintText: 'Search or Ask AI',
-        prefixIcon: const Icon(Icons.search),
+        hintStyle: TextStyle(color: onSurface.withValues(alpha: 0.6)),
+        fillColor: Theme.of(context).cardColor,
+        prefixIcon: Icon(Icons.search, color: onSurface),
         suffixIcon: IconButton(
-          icon: const Icon(Icons.camera_alt),
+          icon: Icon(Icons.camera_alt, color: onSurface),
           onPressed: onAttachPhoto,
         ),
         border: OutlineInputBorder(

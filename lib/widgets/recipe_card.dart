@@ -1,4 +1,4 @@
-
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import '../theme/app_spacing.dart';
 
@@ -6,7 +6,8 @@ class RecipeCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final Color thumbnailColor;
-  final String? imageUrl; 
+  final String? imageUrl;
+  final Uint8List? imageBytes;
   final VoidCallback onTap;
 
   const RecipeCard({
@@ -14,13 +15,17 @@ class RecipeCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.thumbnailColor,
-    this.imageUrl, 
+    this.imageUrl,
+    this.imageBytes,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    final textColor = Theme.of(context).colorScheme.onSurface;
+
     return Card(
+      color: Theme.of(context).cardColor,
       elevation: 0,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
@@ -33,48 +38,27 @@ class RecipeCard extends StatelessWidget {
           padding: const EdgeInsets.all(AppSpacing.sm),
           child: Row(
             children: [
-              
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: imageUrl != null
-                    ? Image.network(
-                        imageUrl!,
-                        width: 60,
-                        height: 60,
-                        fit: BoxFit.cover,
-                        
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            width: 60,
-                            height: 60,
-                            color: thumbnailColor,
-                          );
-                        },
-                      )
-                    : Container(
-                        width: 60,
-                        height: 60,
-                        color: thumbnailColor,
-                      ),
+                child: _buildThumbnail(),
               ),
               const SizedBox(width: AppSpacing.sm),
-              
-              // The Text Column
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
+                        color: textColor,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     Text(
                       subtitle,
-                      style: Theme.of(context).textTheme.labelSmall, 
+                      style: Theme.of(context).textTheme.labelSmall,
                     ),
                   ],
                 ),
@@ -83,6 +67,37 @@ class RecipeCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildThumbnail() {
+    if (imageBytes != null) {
+      return Image.memory(
+        imageBytes!,
+        width: 60,
+        height: 60,
+        fit: BoxFit.cover,
+      );
+    }
+    if (imageUrl != null && imageUrl!.isNotEmpty) {
+      return Image.network(
+        imageUrl!,
+        width: 60,
+        height: 60,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            width: 60,
+            height: 60,
+            color: thumbnailColor,
+          );
+        },
+      );
+    }
+    return Container(
+      width: 60,
+      height: 60,
+      color: thumbnailColor,
     );
   }
 }

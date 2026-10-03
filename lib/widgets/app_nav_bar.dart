@@ -12,10 +12,14 @@ class AppNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
+    final onSurface = Theme.of(context).colorScheme.onSurface;
+
     return BottomNavigationBar(
       currentIndex: activeIndex,
       onTap: onTap,
+      backgroundColor: Theme.of(context).cardColor,
+      selectedItemColor: const Color(0xFF8EC7E3),
+      unselectedItemColor: onSurface.withValues(alpha: 0.6),
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.search),

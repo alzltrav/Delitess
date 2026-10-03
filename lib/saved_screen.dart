@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'theme/app_spacing.dart';
-import 'widgets/recipe_card.dart';
 import 'recipe_detail_screen.dart';
 import 'saved_recipe_manager.dart';
+import 'theme/app_spacing.dart';
+import 'widgets/recipe_card.dart';
 
 class SavedScreen extends StatefulWidget {
   const SavedScreen({super.key});
@@ -36,17 +36,11 @@ class _SavedScreenState extends State<SavedScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFAF6EF),
       appBar: AppBar(
         title: const Text(
           'Saved Recipes',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF3A4750),
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
         automaticallyImplyLeading: false,
       ),
       body: Padding(
@@ -87,7 +81,8 @@ class _SavedScreenState extends State<SavedScreen> {
                         thumbnailColor: index.isEven
                             ? const Color(0xFF8EC7E3)
                             : const Color(0xFFC9E4EE),
-                        imageUrl: imageUrl ?? '',
+                        imageUrl: imageUrl,
+                        imageBytes: imageBytes,
                         onTap: () async {
                           await Navigator.push(
                             context,
@@ -107,7 +102,6 @@ class _SavedScreenState extends State<SavedScreen> {
                               ),
                             ),
                           );
-                          
                           _loadSavedRecipes();
                         },
                       );
