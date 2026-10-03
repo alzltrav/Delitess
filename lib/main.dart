@@ -1,4 +1,3 @@
-
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +16,13 @@ import 'screens/search_screen.dart';
 import 'recipe_detail_screen.dart';
 import 'saved_screen.dart';
 import 'dart:convert';
+import 'theme/theme_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load(fileName: ".env");
+  await ThemeController.loadTheme();
 
   runApp(
     DevicePreview(
@@ -39,41 +40,90 @@ class MyApp extends StatelessWidget {
     final lightScheme = ColorScheme.fromSeed(
       seedColor: const Color(0xFF8EC7E3),
       brightness: Brightness.light,
+      surface: Colors.white,
+      onSurface: const Color(0xFF3A4750),
     );
 
-    return MaterialApp(
-      title: 'DELITESS',
-      debugShowCheckedModeBanner: false,
-      locale: DevicePreview.locale(context),
-      builder: DevicePreview.appBuilder,
-      scrollBehavior: const MaterialScrollBehavior().copyWith(
-        dragDevices: {
-          PointerDeviceKind.mouse,
-          PointerDeviceKind.touch,
-          PointerDeviceKind.trackpad,
-        },
-      ),
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: lightScheme,
-        scaffoldBackgroundColor: const Color(0xFFFAF6EF),
-        textTheme: const TextTheme(
-          headlineSmall: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF3A4750),
+    final darkScheme = ColorScheme.fromSeed(
+      seedColor: const Color(0xFF8EC7E3),
+      brightness: Brightness.dark,
+      surface: const Color(0xFF242B30),
+      onSurface: const Color(0xFFFAF6EF),
+    );
+
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: ThemeController.themeMode,
+      builder: (context, currentMode, _) {
+        return MaterialApp(
+          title: 'DELITESS',
+          debugShowCheckedModeBanner: false,
+          locale: DevicePreview.locale(context),
+          builder: DevicePreview.appBuilder,
+          themeMode: currentMode,
+          scrollBehavior: const MaterialScrollBehavior().copyWith(
+            dragDevices: {
+              PointerDeviceKind.mouse,
+              PointerDeviceKind.touch,
+              PointerDeviceKind.trackpad,
+            },
           ),
-          bodyMedium: TextStyle(
-            fontSize: 16,
-            color: Color(0xFF3A4750),
+          // LIGHT THEME
+          theme: ThemeData(
+            useMaterial3: true,
+            colorScheme: lightScheme,
+            scaffoldBackgroundColor: const Color(0xFFFAF6EF),
+            cardColor: Colors.white,
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Colors.transparent,
+              foregroundColor: Color(0xFF3A4750),
+              elevation: 0,
+            ),
+            textTheme: const TextTheme(
+              headlineSmall: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF3A4750),
+              ),
+              bodyMedium: TextStyle(
+                fontSize: 16,
+                color: Color(0xFF3A4750),
+              ),
+              labelSmall: TextStyle(
+                fontSize: 12,
+                color: Color(0xA63A4750),
+              ),
+            ),
           ),
-          labelSmall: TextStyle(
-            fontSize: 12,
-            color: Color(0xA63A4750),
+          // DARK THEME
+          darkTheme: ThemeData(
+            useMaterial3: true,
+            colorScheme: darkScheme,
+            scaffoldBackgroundColor: const Color(0xFF181C1F),
+            cardColor: const Color(0xFF242B30),
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Colors.transparent,
+              foregroundColor: Color(0xFFFAF6EF),
+              elevation: 0,
+            ),
+            textTheme: const TextTheme(
+              headlineSmall: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFFFAF6EF),
+              ),
+              bodyMedium: TextStyle(
+                fontSize: 16,
+                color: Color(0xFFFAF6EF),
+              ),
+              labelSmall: TextStyle(
+                fontSize: 12,
+                color: Color(0xB3FAF6EF),
+              ),
+            ),
           ),
-        ),
-      ),
-      home: const HomeScreen(),
+          home: const HomeScreen(),
+        );
+      },
     );
   }
 }
@@ -156,7 +206,6 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -164,7 +213,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     try {
-      
       final model = GenerativeModel(
         model: 'gemini-3.6-flash',
         apiKey: apiKey,
@@ -176,6 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
       {
         "title": "Name of the dish",
         "time": "Estimated cooking time (e.g. 20 min)",
+        "cuisine": "Cuisine type (e.g. Mediterranean, Filipino, Japanese)",
         "ingredients": ["ingredient 1", "ingredient 2"],
         "instructions": ["step 1", "step 2"]
       }
@@ -188,13 +237,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ])
       ]);
 
-      
       if (mounted) Navigator.pop(context);
 
-      
       final data = jsonDecode(response.text!);
 
-    
       if (mounted) {
         Navigator.push(
           context,
@@ -202,7 +248,8 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: (context) => RecipeDetailScreen(
               title: data['title'] ?? 'Custom Recipe',
               time: data['time'] ?? 'Unknown time',
-              imageBytes: bytes, // Passes the photo they just uploaded to the header!
+              cuisine: data['cuisine'] ?? 'International',
+              imageBytes: bytes,
               ingredients: List<String>.from(data['ingredients'] ?? []),
               instructions: List<String>.from(data['instructions'] ?? []),
             ),
@@ -210,7 +257,6 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       }
     } catch (e) {
-      
       if (mounted) Navigator.pop(context);
 
       if (mounted) {
@@ -218,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SnackBar(content: Text('AI is currently busy. Please try again later!')),
         );
       }
-      
+
       print('Gemini Error: $e');
     }
   }
@@ -226,16 +272,23 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFAF6EF),
       appBar: _selectedIndex == 0
           ? AppBar(
               title: const Text(
                 'DELITESS',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              foregroundColor: const Color(0xFF3A4750),
+              actions: [
+                IconButton(
+                  tooltip: 'Toggle Dark Mode',
+                  icon: Icon(
+                    ThemeController.isDark ? Icons.light_mode : Icons.dark_mode,
+                  ),
+                  onPressed: () {
+                    ThemeController.toggleTheme();
+                  },
+                ),
+              ],
             )
           : null,
       body: _selectedIndex == 0
@@ -258,13 +311,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  const Text(
+                  Text(
                     'Trending Recipes',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF3A4750),
-                    ),
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   SizedBox(

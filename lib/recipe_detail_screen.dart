@@ -2,11 +2,13 @@
 import 'package:flutter/material.dart';
 import 'theme/app_spacing.dart';
 import 'dart:typed_data';
+import 'saved_recipe_manager.dart';
 
 class RecipeDetailScreen extends StatefulWidget {
   final String title;
   final String? imageUrl;
   final String time;
+  final String? cuisine;
   final Uint8List? imageBytes;
   final List<String>? ingredients;
   final List<String>? instructions;
@@ -15,6 +17,7 @@ class RecipeDetailScreen extends StatefulWidget {
     super.key,
     required this.title,
     required this.time,
+    this.cuisine,
     this.imageUrl,
     this.imageBytes,
     this.ingredients,
@@ -29,6 +32,19 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   bool isSaved = false; // Controls the bookmark toggle
 
   @override
+  void initState() {
+    super.initState();
+    _checkIfSaved();
+  }
+
+  Future<void> _checkIfSaved() async {
+    final saved = await SavedRecipeManager.isRecipeSaved(widget.title);
+    if (mounted) {
+      setState(() {
+        isSaved = saved;
+      });
+    }
+  }
   Widget build(BuildContext context) {
 
     final displayIngredients = widget.ingredients ?? [
@@ -64,10 +80,21 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                   isSaved ? Icons.bookmark : Icons.bookmark_border,
                   color: isSaved ? const Color(0xFF8EC7E3) : const Color(0xFF3A4750),
                 ),
-                onPressed: () {
-                  setState(() {
-                    isSaved = !isSaved; // Toggle the saved state
-                  });
+                onPressed: () async {
+                  final nowSaved = await SavedRecipeManager.toggleRecipe(
+                    title: widget.title,
+                    time: widget.time,
+                    cuisine: widget.cuisine ?? 'Filipino',
+                    imageUrl: widget.imageUrl,
+                    imageBytes: widget.imageBytes,
+                    ingredients: displayIngredients,
+                    instructions: displayInstructions,
+                  );
+                  if (mounted) {
+                    setState(() {
+                      isSaved = nowSaved;
+                    });
+                  }
                 },
               ),
             ],
@@ -116,7 +143,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                       const Icon(Icons.restaurant, size: 16, color: Colors.grey),
                       const SizedBox(width: 4),
                       Text(
-                        'Filipino',
+                        widget.cuisine ?? 'Filipino',
                         style: Theme.of(context).textTheme.labelSmall,
                       ),
                     ],

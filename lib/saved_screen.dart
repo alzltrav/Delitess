@@ -1,10 +1,37 @@
-
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'theme/app_spacing.dart';
 import 'widgets/recipe_card.dart';
-import 'recipe_detail_screen.dart'; 
-class SavedScreen extends StatelessWidget {
+import 'recipe_detail_screen.dart';
+import 'saved_recipe_manager.dart';
+
+class SavedScreen extends StatefulWidget {
   const SavedScreen({super.key});
+
+  @override
+  State<SavedScreen> createState() => _SavedScreenState();
+}
+
+class _SavedScreenState extends State<SavedScreen> {
+  List<Map<String, dynamic>> _savedRecipes = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedRecipes();
+  }
+
+  Future<void> _loadSavedRecipes() async {
+    final recipes = await SavedRecipeManager.getSavedRecipes();
+    if (mounted) {
+      setState(() {
+        _savedRecipes = recipes;
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,41 +47,72 @@ class SavedScreen extends StatelessWidget {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        
-        automaticallyImplyLeading: false, 
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(AppSpacing.sm),
-        child: ListView(
-          children: [
-            RecipeCard(
-              title: 'Chicken Adobo',
-              subtitle: '45 min · Filipino',
-              thumbnailColor: const Color(0xFF8EC7E3),
-              imageUrl: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=500',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const RecipeDetailScreen(
-                      title: 'Chicken Adobo',
-                      imageUrl: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=500',
-                      time: '45 min',
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _savedRecipes.isEmpty
+                ? const Center(
+                    child: Text(
+                      'No saved recipes yet.\nTap the bookmark icon on any recipe to save it!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
                     ),
+                  )
+                : ListView.separated(
+                    itemCount: _savedRecipes.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: AppSpacing.xs),
+                    itemBuilder: (context, index) {
+                      final recipe = _savedRecipes[index];
+                      final String title = recipe['title'] ?? 'Untitled Recipe';
+                      final String time = recipe['time'] ?? '30 min';
+                      final String cuisine = recipe['cuisine'] ?? 'Filipino';
+                      final String? imageUrl = recipe['imageUrl'];
+                      final String? base64Img = recipe['imageBase64'];
+
+                      Uint8List? imageBytes;
+                      if (base64Img != null) {
+                        imageBytes = base64Decode(base64Img);
+                      }
+
+                      return RecipeCard(
+                        title: title,
+                        subtitle: '$time · $cuisine',
+                        thumbnailColor: index.isEven
+                            ? const Color(0xFF8EC7E3)
+                            : const Color(0xFFC9E4EE),
+                        imageUrl: imageUrl ?? '',
+                        onTap: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RecipeDetailScreen(
+                                title: title,
+                                time: time,
+                                cuisine: cuisine,
+                                imageUrl: imageUrl,
+                                imageBytes: imageBytes,
+                                ingredients: recipe['ingredients'] != null
+                                    ? List<String>.from(recipe['ingredients'])
+                                    : null,
+                                instructions: recipe['instructions'] != null
+                                    ? List<String>.from(recipe['instructions'])
+                                    : null,
+                              ),
+                            ),
+                          );
+                          
+                          _loadSavedRecipes();
+                        },
+                      );
+                    },
                   ),
-                );
-              },
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            RecipeCard(
-              title: 'Spicy Garlic Noodles',
-              subtitle: '15 min · Asian',
-              thumbnailColor: const Color(0xFFC9E4EE),
-              imageUrl: 'https://images.unsplash.com/photo-1552611052-33e04de081de?w=500',
-              onTap: () {}, 
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -66,3 +66,15 @@ The AI instructions were accurate today, and the code worked on the first try.
 ### 3. Who wrote what
 **Error Handling:** The AI provided the `ScaffoldMessenger.of(context).showSnackBar` syntax.
 **Testing & Verification:** I ran the app, verified that the 503 error from yesterday had cleared up, and successfully generated a "Classic Shakshuka" recipe dynamically from a gallery photo into the new UI layout.
+
+October 3, 2026
+
+### 1. How I used AI
+I used AI to make the cuisine tag dynamic, build a local persistence manager (`SavedRecipeManager`) for bookmarking recipes using `SharedPreferences`, and implement a persistent Dark Mode toggle (`ThemeController`) using `ValueNotifier`.
+
+### 2. Where the AI got it wrong
+Some screens still had hardcoded light background colors (`0xFFFAF6EF`) and dark slate text (`0xFF3A4750`), which initially prevented Dark Mode from applying cleanly until I shared my full `main.dart` and `saved_screen.dart` files so the hardcoded colors could be replaced with theme-aware properties.
+
+### 3. Who wrote what
+**Persistence & Theme Logic:** The AI wrote `saved_recipe_manager.dart`, `theme_controller.dart`, and the `ValueListenableBuilder` wrapper in `main.dart`.
+**Integration & Testing:** I integrated the new manager classes into the project structure, connected the dynamic `cuisine` field to the Gemini prompt, and verified the state updates across screens.
