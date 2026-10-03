@@ -23,9 +23,9 @@ personal data.
 ---
 
 # DELITESS
-[![Made with AI]][(https://img.shields.io/badge/Made_with-AI_assistance-blue)](AI-USAGE.md)
+![Builds with Flutter and AI](https://img.shields.io/badge/Builds%20with-Flutter%20%26%20AI-02569B?style=for-the-badge&logo=flutter&logoColor=white)
 
-Built with help from Claude (Anthropic) & Gemini - see [AI-USAGE.md](AI-USAGE.md) for exactly how.
+> **AI Disclosure:** Built with assistance from **Anthropic Claude** (initial prototyping and UI scaffolding through Sept 23) and **Google Gemini** (dynamic JSON integration, local persistence, and dark mode polish). For a complete log of prompts, debugging cases, commit links, and code authorship, see [AI-USAGE.md](./AI-USAGE.md).
 
 ## 1. Overview
 
