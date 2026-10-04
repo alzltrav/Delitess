@@ -12,7 +12,7 @@
 
 **Live demo:** https://alzltrav.github.io/Delitess_app/ <!-- GitHub Pages is set up already; replace if you host elsewhere -->
 
-**Demo video:** `docs/demo.mp4` (link it here once it exists)
+**Demo video:** https://drive.google.com/drive/folders/1UbK5AkpSeF_bwCEbqfArQP4wUD_71k9n?usp=sharing
 
 **Course:** Applications Development and Emerging Technologies (6ADET), Holy Angel University
 
