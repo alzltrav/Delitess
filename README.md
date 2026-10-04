@@ -11,8 +11,11 @@
 
 
 **Live demo:** https://alzltrav.github.io/Delitess_app/ <!-- GitHub Pages is set up already; replace if you host elsewhere -->
+
 **Demo video:** `docs/demo.mp4` (link it here once it exists)
+
 **Course:** Applications Development and Emerging Technologies (6ADET), Holy Angel University
+
 **Author:** Travis Alzola
 
 This repository lives in the author's own GitHub account and is public on
