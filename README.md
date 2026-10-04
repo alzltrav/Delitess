@@ -67,7 +67,7 @@ When the app successfully boots, you will see a starting screen with a tap count
 
 | Home | Search | Recipe Details | Saved |
 | :---: | :---: | :---: | :---: |
-| ![Home](home.png) | ![Search](search.png) | ![Recipe Detail](detail.png) | ![Saved](saved.png) |
+| ![Home](docs/assets/home.png) | ![Search](docs/assets/search.png) | ![Recipe Detail](docs/assets/detail.png) | ![Saved](docs/assets/saved.png) |
 
 
 ## 7. Known issues and next steps
