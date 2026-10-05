@@ -18,8 +18,15 @@ import 'widgets/trending_recipe_card.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  try {
 
-  await dotenv.load(fileName: ".env");
+    await dotenv.load(fileName: ".env");
+
+  } catch (e) {
+    debugPrint("No .env file found, running with fallback config.");
+  }
+  
+
   await ThemeController.loadTheme();
 
   runApp(

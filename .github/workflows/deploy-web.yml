@@ -45,7 +45,7 @@ jobs:
     outputs:
       ready: ${{ steps.check.outputs.ready }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
 
       # A fresh copy of the template has no Flutter app in it yet. Skip quietly
       # rather than failing, so your repo is not red before you have written
@@ -74,6 +74,12 @@ jobs:
       - if: steps.check.outputs.ready == 'true'
         run: flutter pub get
 
+      # Creates an empty .env file on the runner so pubspec.yaml asset bundling
+      # succeeds without shipping a billable Gemini API key to the public site.
+      - name: Create placeholder .env for web build
+        if: steps.check.outputs.ready == 'true'
+        run: touch .env
+
       # Neither of these blocks your deploy: a failing test should not take your
       # live link down. They are here so you find out before your grader does.
       - if: steps.check.outputs.ready == 'true'
@@ -100,7 +106,7 @@ jobs:
           # add one --dart-define=NAME=$NAME line per secret you uncommented above
 
       - if: steps.check.outputs.ready == 'true'
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-pages-artifact@v3
         with:
           path: build/web
 
@@ -114,4 +120,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@v4
