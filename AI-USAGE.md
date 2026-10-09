@@ -99,3 +99,12 @@
 1. **JSON Serialization & Base64 Image Persistence (`lib/saved_recipe_manager.dart`, `lib/saved_screen.dart`, and `lib/recipe_detail_screen.dart`) — Commits [abccb1a](https://github.com/alzltrav/Delitess_app/commit/abccb1a), [18da76a](https://github.com/alzltrav/Delitess_app/commit/18da76a), & [9c50ec5](https://github.com/alzltrav/Delitess_app/commit/9c50ec5):**  
    - **What the AI wrote:** Google Gemini wrote the `SavedRecipeManager` helper class in `lib/saved_recipe_manager.dart`, the dynamic list spread rendering (`...displayIngredients.map()`) in `lib/recipe_detail_screen.dart`, and the `ValueNotifier<ThemeMode>` controller in `lib/theme/theme_controller.dart` (building on the initial widget scaffolding generated with Anthropic Claude in commits `d61ec24` and `b4ccbc9`).
    - **How it works:** Because `SharedPreferences` can only store primitive types like `List<String>` and cannot store complex Dart objects or raw `Uint8List` image files directly, `SavedRecipeManager.toggleRecipe()` takes a recipe's properties (`title`, `time`, `cuisine`, `imageUrl`, `ingredients`, `instructions`) and converts any local AI gallery photo (`Uint8List`) into a Base64 text string using `base64Encode(imageBytes)`. It then serializes the entire recipe `Map<String, dynamic>` into a single JSON string via `jsonEncode()` and saves the list under the `'saved_recipes_list'` key with `prefs.setStringList()`. When the user opens the **Saved** tab (`lib/saved_screen.dart`), `getSavedRecipes()` reads that `List<String>`, runs `jsonDecode()` on each entry to reconstruct the `Map`, and decodes `imageBase64` back into `Uint8List` via `base64Decode()` so `RecipeCard` and `RecipeDetailScreen` can render the exact gallery photo using `Image.memory()`.
+
+
+### October 9, 2026 — Asset Repair & Design System Documentation Polish
+
+- **Tool:** Google Gemini
+- **Task / Feature:** Fixing broken Beef Tapa asset on Home screen and consolidating `docs/03-design-system.md` tables into Markdown.
+- **AI Output / Suggestions:**
+  - Provided a direct Unsplash food photography URL (`https://images.unsplash.com/photo-1544025162-d76694265947?...`) for `Beef Tapa` in `lib/main.dart` to replace the broken image link that was triggering the error fallback box.
+  - Generated Markdown tables for the reusable `Components` list and `Changes since the last version` changelog in `docs/03-design-system.md`.

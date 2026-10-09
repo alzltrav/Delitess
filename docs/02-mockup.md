@@ -1,23 +1,51 @@
 # Mockup and wireframes
 
-The visual plan for this app. Your wireframes answered what goes where; the
-mockup shows what it looks like.
+The visual plan for this app. Your wireframes answered what goes where; the mockup shows what it looks like[cite: 66].
 
 ## Mockup
 
-Put your mockup images or PDF in `assets/` and embed them here, one heading per
-screen.
+Visual documentation files in `docs/assets/`:
+- [DELITESS Mockup (PDF)](assets/DELITESS_Mockup.pdf)[cite: 58]
+- [DELITESS Wireframe (PDF)](assets/DELITESS_Wireframe.pdf)[cite: 47]
 
-_(Embed your mockup here once it is in `assets/`.)_
+### Home / Ask AI
+![Home Screen](assets/home.png)
+- Primary entry point showing the `DELITESS` app bar, Dark Mode toggle, `AskAiComposer`, horizontal auto-scrolling `Trending Recipes` carousel, and featured recipe cards[cite: 58, 63].
+
+### Search Results
+![Search Screen](assets/search.png)
+- Displays query input in the composer bar, loading state during API calls, and candidate recipe cards matching the search term or image[cite: 59, 64].
+
+### Recipe Detail
+![Recipe Detail](assets/detail.png)
+- Features a collapsible hero food image, title, prep time and cuisine metadata row, bulleted ingredients, numbered instructions, and a persistent bookmark icon.
+
+### Saved Recipes
+![Saved Recipes](assets/saved.png)
+- Displays all recipes bookmarked by the user, supporting both network thumbnails and Base64-decoded gallery photos, with an empty state when no items are saved[cite: 65].
+
+---
 
 ## Wireframes
 
-Your earlier box-and-label sketches and the screen flow: which screen opens
-first, and how a user moves between them. Photos of paper are fine.
+Sketches and screen flows are documented in [`assets/DELITESS_Wireframe.pdf`](assets/DELITESS_Wireframe.pdf) and on [Figma](https://www.figma.com/design/XCx8DKKn8vnbKS73SBBngN/Wireframe-Delitess?node-id=0-1&t=6pAciWqrgSv2mqzN-1)[cite: 47, 57].
 
-_(Embed your flow diagram and sketches here once they are in `assets/`.)_
+### Screen Flow
 
-## Screens
-
-One short section per screen: what is on it, what the user does, and where each
-action goes.
+```text
+[Home / Ask AI] (Entry point)
+  │
+  ├── Types dish/ingredient ────────► [Search Results]
+  │                                        │
+  │                                        └── Taps a recipe ──► [Recipe Detail]
+  │                                                                   │
+  ├── Attaches photo (Confident AI) ──────────────────────────────────┤
+  │                                                                   ▼
+  ├── Taps a trending / featured card ──────────────────────────► [Recipe Detail]
+  │                                                               (Ingredients + Steps)
+  │                                                               (Save toggle)
+  │                                                                   │
+  └── Bottom nav taps "Saved" ──────► [Saved Recipes] ◄───────────────┘
+                                      (List or empty state)
+                                           │
+                                           └── Taps a recipe ──► [Recipe Detail]

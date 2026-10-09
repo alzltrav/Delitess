@@ -420,7 +420,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: 'Beef Tapa',
                           subtitle: '20 min',
                           imageUrl:
-                              'https://images.unsplash.com/photo-1690214691494-b2cfa5fb7d7e?w=500',
+                              'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop&q=80',
                           onTap: () => _openRecipe(
                             title: 'Beef Tapa',
                             time: '20 min',
