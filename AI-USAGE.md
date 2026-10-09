@@ -107,4 +107,4 @@
 - **Task / Feature:** Fixing broken Beef Tapa asset on Home screen and consolidating `docs/03-design-system.md` tables into Markdown.
 - **AI Output / Suggestions:**
   - Provided a direct Unsplash food photography URL (`https://images.unsplash.com/photo-1544025162-d76694265947?...`) for `Beef Tapa` in `lib/main.dart` to replace the broken image link that was triggering the error fallback box.
-  - Generated Markdown tables for the reusable `Components` list and `Changes since the last version` changelog in `docs/03-design-system.md`.
+  - Generated Markdown tables for the reusable `Components` list and `Changes since the last version` changelog in `docs/03-design-system.md`.`

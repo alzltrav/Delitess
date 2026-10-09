@@ -67,6 +67,7 @@ class AppSpacing {
   static const double md = 24; // space/3
   static const double lg = 32; // space/4
 }
+```
 
 ## Components
 
